@@ -5,7 +5,8 @@ var mongo = require('mongodb');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var shortid = require('shortid');
-var logger =require('morgan');
+var logger = require('morgan');
+var dns = require('dns');
 var Schema = mongoose.Schema;
 
 var cors = require('cors');
@@ -63,15 +64,21 @@ app.get("/api/shorturl/:id", function(req, res) {
 
 
 app.post("/api/shorturl/new", function(req, res) {
-  const shorturl = shortid.generate();
-  const newUrl = new ShortURL({ url: req.body.url, shorturl});
-  newUrl.save(function(err, savedurl) {
+  dns.lookup(req.body.url, function(err) {
     if(!err) {
-      res.json({"original_url": req.body.url, "short_url": shorturl });
-    }
-    else {
-      console.log(err);
-      res.send(500, "Error saving url");
+      const shorturl = shortid.generate();
+      const newUrl = new ShortURL({ url: req.body.url, shorturl});
+      newUrl.save(function(err, savedurl) {
+        if(!err) {
+          res.json({"original_url": req.body.url, "short_url": shorturl });
+        }
+        else {
+          console.log(err);
+          res.send(500, "Error saving url");
+        }
+      });
+    } else {
+      res.json({"error":"invalid URL"});
     }
   });
 });
