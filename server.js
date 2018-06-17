@@ -1,5 +1,3 @@
-'use strict';
-
 var express = require('express');
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
@@ -7,6 +5,7 @@ var bodyParser = require('body-parser');
 var shortid = require('shortid');
 var logger = require('morgan');
 var dns = require('dns');
+const url = require('url');
 var Schema = mongoose.Schema;
 
 var cors = require('cors');
@@ -25,7 +24,7 @@ var ShortURL = mongoose.model('ShortURL', shortUrlSchema);
 var port = process.env.PORT || 3000;
 
 /** this project needs a db !! **/ 
-mongoose.connect(process.env.MONGOLAB_URI,{ useMongoClient: true });
+mongoose.connect(process.env.MONGOLAB_URI);
 
 app.use(cors());
 app.use(logger('tiny'));
@@ -64,7 +63,8 @@ app.get("/api/shorturl/:id", function(req, res) {
 
 
 app.post("/api/shorturl/new", function(req, res) {
-  dns.lookup(req.body.url, function(err) {
+  const urlHostname = url.parse(req.body.url).hostname;
+  dns.lookup(urlHostname, function(err) {
     if(!err) {
       const shorturl = shortid.generate();
       const newUrl = new ShortURL({ url: req.body.url, shorturl});
@@ -78,7 +78,8 @@ app.post("/api/shorturl/new", function(req, res) {
         }
       });
     } else {
-      res.json({"error":"invalid URL"});
+      console.log(err);
+      res.status(500).json({"error":"invalid URL"});
     }
   });
 });
