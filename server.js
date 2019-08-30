@@ -46,7 +46,7 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
-app.get("/api/shorturl/:id", function(req, res) {
+app.get("/api/:id", function(req, res) {
   ShortURL.findOne({shorturl: req.params.id}, function(err, foundurl) {
     if(err) {
       console.log(err);
