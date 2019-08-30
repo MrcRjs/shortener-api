@@ -5,7 +5,7 @@
 
 1. I can POST a URL to 
 
-`https://quiet-wedge.glitch.me/api/shorturl/new`
+`https://shorty-m.glitch.me/api/shorturl/new`
 
 and I will receive a shortened URL in the JSON response.
 
@@ -20,11 +20,11 @@ Example :
 
 #### Creation Example:
 
-POST https://quiet-wedge.glitch.me/api/shorturl/new - body (urlencoded) :  url=https://www.google.com
+POST https://shorty-m.glitch.me/api/shorturl/new - body (urlencoded) :  url=https://www.google.com
 
 #### Usage:
 
-https://quiet-wedge.glitch.me/api/mlULKg_C9
+https://shorty-m.glitch.me/api/mlULKg_C9
 
 #### Will redirect to:
 
